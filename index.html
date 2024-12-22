@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blake's Budget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: green;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: lightblue;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 255, 98, 0.771);
+            width: 100%;
+            max-width: 50%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #3c4b6b;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #2e3a55;
+        }
+
+        .expense-list {
+            margin-top: 30px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .expense-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .link-button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 16px;
+            color: white;
+            background-color: seagreen;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .link-button:hover {
+            background-color: yellowgreen;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Blake's Budget</h1>
+
+    <div class="total">
+        $<span id="total-amount">0.00</span>
+    </div>
+
+<br><br>
+
+    <a href="input.html" class="link-button">Add New Expense</a>
+</div>
+
+<script>
+    let totalAmount = parseFloat(localStorage.getItem('totalAmount')) || 0;
+    const expenseList = document.getElementById('expense-list');
+
+    function updateTotalAmount() {
+        document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+    }
+
+    // Update total amount and expense list when the page loads
+    updateTotalAmount();
+    updateExpenseList();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: green;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: lightblue;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 255, 98, 0.771);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: darkslategray;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            color: darkgoldenrod;
+            margin-bottom: 5px;
+            display: block;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid seagreen;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #3c4b6b;
+            box-shadow: 0 0 8px rgba(60, 75, 107, 0.2);
+        }
+
+        .submit-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            color: white;
+            background-color: seagreen;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: yellowgreen;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            font-size: 16px;
+            color: maroon;
+            text-decoration: none;
+        }
+
+        .expense-list {
+            margin-top: 30px;
+            text-align: center;
+            color: darkred;
+        }
+
+        .expense-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .expense-list li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px seagreen;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Add Expense</h1>
+    <form id="expense-form">
+        <div class="form-group">
+            <label for="value">Enter Amount ($)</label>
+            <input type="number" id="value" name="value" required placeholder="e.g., 150" step="0.01">
+        </div>
+
+        <div class="form-group">
+            <label for="expense">Select Expense Type</label>
+            <select id="expense" name="expense" required>
+                <option value="">Select an option</option>
+                <option value="Food">Food</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Income">Income</option>
+                <option value="Other">Other</option>
+                <option value="Tithing">Tithing</option>
+                <option value="Dates">Dates</option>
+                <option value="Gas">Gas</option>
+            </select>
+        </div>
+
+        <button type="submit" class="submit-btn">Add Expense</button>
+    </form>
+
+    <a href="index.html" class="back-button">Back to Main Page</a>
+
+    <!-- Expense List Section -->
+    <div class="expense-list" id="expense-list">
+        <h3>Expense List</h3>
+        <ul id="expense-items">
+            <!-- Dynamic expense items will appear here -->
+        </ul>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('expense-form');
+    const valueInput = document.getElementById('value');
+    const expenseSelect = document.getElementById('expense');
+    const expenseItemsList = document.getElementById('expense-items');
+
+    // Function to load saved expenses from localStorage
+    function loadExpenses() {
+        const savedExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        savedExpenses.forEach(expense => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${expense.type}: $${expense.amount.toFixed(2)}`;
+            expenseItemsList.appendChild(listItem);
+        });
+    }
+
+    // Load expenses when the page is loaded
+    window.onload = loadExpenses;
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const value = valueInput.value;
+        const expense = expenseSelect.value;
+
+        if (value && expense) {
+            // Create a new expense object
+            const newExpense = { type: expense, amount: parseFloat(value) };
+
+            // Retrieve the existing expenses from localStorage
+            const currentExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+            // Add the new expense to the list
+            currentExpenses.push(newExpense);
+
+            // Save the updated expenses list back to localStorage
+            localStorage.setItem('expenses', JSON.stringify(currentExpenses));
+
+            // Add the new expense to the DOM
+            const listItem = document.createElement('li');
+            listItem.textContent = `${expense}: $${parseFloat(value).toFixed(2)}`;
+            expenseItemsList.appendChild(listItem);
+
+            // Update the total amount in localStorage
+            let currentTotal = localStorage.getItem('totalAmount') || 0;
+            currentTotal = parseFloat(currentTotal) + parseFloat(value);
+            localStorage.setItem('totalAmount', currentTotal);
+
+            alert(`Expense added! Total updated to: $${currentTotal.toFixed(2)}`);
+
+            // Reset form fields
+            valueInput.value = '';
+            expenseSelect.value = '';
+        }
+    });
+</script>
+
+</body>
+</html>
